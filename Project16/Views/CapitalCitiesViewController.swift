@@ -4,19 +4,28 @@
 //
 //  Created by Karla E. Martins Fernandes on 13/10/26.
 //
-
-
 import UIKit
 import MapKit
 
-class ViewController: UIViewController {
+class CapitalCitiesViewController: UIViewController {
     
     private let mapView = MKMapView()
+    private let viewModel: CapitalCitiesViewModel
+
+    init(viewModel: CapitalCitiesViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         configureMapView()
+        configureAnnotations()
         
     }
 
@@ -35,6 +44,20 @@ class ViewController: UIViewController {
                mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
            ])
        }
+    
+    
+    private func configureAnnotations() {
+        let annotations = viewModel.cities.map { city in
+            let annotation = MKPointAnnotation()
+            annotation.title = city.title
+            annotation.subtitle = city.info
+            annotation.coordinate = city.coordinate
+            return annotation
+        }
+
+        mapView.addAnnotations(annotations)
+    }
+
 }
 
 

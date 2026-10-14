@@ -17,7 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        let viewController = ViewController()
+        let viewModel = CapitalCitiesViewModel()
+        let viewController = CapitalCitiesViewController(viewModel: viewModel)
         window.rootViewController = viewController
 
         self.window = window
