@@ -71,10 +71,16 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
     }
     
     
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let title = view.annotation?.title, let title else { return }
-        guard let subtitle = view.annotation?.subtitle, let subtitle else { return }
+        guard let title = view.annotation?.title ?? nil,
+              let subtitle = view.annotation?.subtitle ?? nil else { return }
 
+        showCapitalDetails(title: title, subtitle: subtitle)
+    }
+
+    
+    private func showCapitalDetails(title: String, subtitle: String) {
         let alert = UIAlertController(
             title: title,
             message: subtitle,
