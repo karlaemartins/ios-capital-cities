@@ -107,6 +107,7 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
             guard !(annotation is MKUserLocation) else { return nil }
 
             let identifier = "CapitalCity"
@@ -123,17 +124,17 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
             return annotationView
         }
     
-    func mapView(
-        _ mapView: MKMapView,
+    func mapView(_ mapView: MKMapView,
         annotationView view: MKAnnotationView,
-        calloutAccessoryControlTapped control: UIControl
-    ) {
+        calloutAccessoryControlTapped control: UIControl) {
+        
         guard let title = view.annotation?.title ?? nil,
               let city = viewModel.cities.first(where: { $0.title == title }) else {
             return
         }
 
-        showCapitalDetails(title: city.title, subtitle: city.info)
+        let wikiViewController = CapitalWikiViewController(url: city.wikipediaURL)
+            navigationController?.pushViewController(wikiViewController, animated: true)
     }
 
     

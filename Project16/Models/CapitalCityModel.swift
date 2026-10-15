@@ -11,4 +11,5 @@ struct CapitalCityModel {
     let title: String
     let info: String
     let coordinate: CLLocationCoordinate2D
+    let wikipediaURL: URL
 }
