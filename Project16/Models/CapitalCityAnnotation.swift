@@ -8,11 +8,12 @@
 import MapKit
 
 final class CapitalCityAnnotation: NSObject, MKAnnotation {
-    let title: String?
+    let city: CapitalCityModel
+    var title: String? { city.title }
     let coordinate: CLLocationCoordinate2D
 
     init(city: CapitalCityModel) {
-        self.title = city.title
+        self.city = city
         self.coordinate = city.coordinate
         super.init()
     }

@@ -10,13 +10,11 @@ import MapKit
 class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
     
     private let mapView = MKMapView()
-    private let mapTypeControl = UISegmentedControl(items: [
-        "Padrão",
-        "Satélite",
-        "Híbrido"
-    ])
+    private let mapTypeControl = UISegmentedControl(items: ["Padrão","Satélite","Híbrido"])
     private let viewModel: CapitalCitiesViewModel
+    var onCapitalSelected: ((CapitalCityModel) -> Void)?
 
+    
     init(viewModel: CapitalCitiesViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -128,25 +126,12 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
         annotationView view: MKAnnotationView,
         calloutAccessoryControlTapped control: UIControl) {
         
-        guard let title = view.annotation?.title ?? nil,
-              let city = viewModel.cities.first(where: { $0.title == title }) else {
-            return
+        guard let annotation = view.annotation as? CapitalCityAnnotation else {
+                return
         }
 
-        let wikiViewController = CapitalWikiViewController(url: city.wikipediaURL)
-            navigationController?.pushViewController(wikiViewController, animated: true)
-    }
+        onCapitalSelected?(annotation.city)
 
-    
-    private func showCapitalDetails(title: String, subtitle: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: subtitle,
-            preferredStyle: .alert
-        )
-
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
 
     
