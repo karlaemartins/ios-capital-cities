@@ -10,6 +10,11 @@ import MapKit
 class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
     
     private let mapView = MKMapView()
+    private let mapTypeControl = UISegmentedControl(items: [
+        "Padrão",
+        "Satélite",
+        "Híbrido"
+    ])
     private let viewModel: CapitalCitiesViewModel
 
     init(viewModel: CapitalCitiesViewModel) {
@@ -27,6 +32,8 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
         configureMapView()
         configureAnnotations()
         configureInitialRegion()
+        configureMapTypeControl()
+        configureMapTypeControlLayout()
         
     }
 
@@ -41,12 +48,45 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
            mapView.translatesAutoresizingMaskIntoConstraints = false
 
            NSLayoutConstraint.activate([
-               mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+               mapView.topAnchor.constraint(equalTo: view.topAnchor),
                mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
            ])
        }
+    
+    private func configureMapTypeControl() {
+        mapTypeControl.selectedSegmentIndex = 0
+        mapTypeControl.selectedSegmentTintColor = .systemBlue
+        mapTypeControl.backgroundColor = UIColor.black.withAlphaComponent(0.65)
+
+        mapTypeControl.setTitleTextAttributes(
+            [.foregroundColor: UIColor.white],
+            for: .normal
+        )
+
+        mapTypeControl.setTitleTextAttributes(
+            [.foregroundColor: UIColor.white],
+            for: .selected
+        )
+
+        mapTypeControl.addTarget(
+            self,
+            action: #selector(mapTypeChanged),
+            for: .valueChanged
+        )
+    }
+    
+    private func configureMapTypeControlLayout() {
+        view.addSubview(mapTypeControl)
+        mapTypeControl.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            mapTypeControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            mapTypeControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            mapTypeControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
+    }
     
     
     private func configureAnnotations() {
@@ -111,6 +151,19 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
         present(alert, animated: true)
     }
 
+    
+    @objc private func mapTypeChanged() {
+        switch mapTypeControl.selectedSegmentIndex {
+        case 0:
+            mapView.mapType = .standard
+        case 1:
+            mapView.mapType = .satellite
+        case 2:
+            mapView.mapType = .hybrid
+        default:
+            break
+        }
+    }
 
 }
 
