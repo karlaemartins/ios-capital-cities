@@ -91,10 +91,7 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
     
     private func configureAnnotations() {
         let annotations = viewModel.cities.map { city in
-            let annotation = MKPointAnnotation()
-            annotation.title = city.title
-            annotation.coordinate = city.coordinate
-            return annotation
+            CapitalCityAnnotation(city: city)
         }
 
         mapView.addAnnotations(annotations)
