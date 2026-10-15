@@ -7,7 +7,7 @@
 import UIKit
 import MapKit
 
-class CapitalCitiesViewController: UIViewController {
+class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
     
     private let mapView = MKMapView()
     private let viewModel: CapitalCitiesViewModel
@@ -35,7 +35,9 @@ class CapitalCitiesViewController: UIViewController {
     }
     
     private func configureMapView() {
+           
            view.addSubview(mapView)
+           mapView.delegate = self
            mapView.translatesAutoresizingMaskIntoConstraints = false
 
            NSLayoutConstraint.activate([
@@ -67,6 +69,22 @@ class CapitalCitiesViewController: UIViewController {
 
         mapView.setRegion(region, animated: false)
     }
+    
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let title = view.annotation?.title, let title else { return }
+        guard let subtitle = view.annotation?.subtitle, let subtitle else { return }
+
+        let alert = UIAlertController(
+            title: title,
+            message: subtitle,
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
 
 }
 
