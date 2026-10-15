@@ -26,6 +26,7 @@ class CapitalCitiesViewController: UIViewController {
         configureView()
         configureMapView()
         configureAnnotations()
+        configureInitialRegion()
         
     }
 
@@ -56,6 +57,15 @@ class CapitalCitiesViewController: UIViewController {
         }
 
         mapView.addAnnotations(annotations)
+    }
+    
+    
+    private func configureInitialRegion() {
+        let center = CLLocationCoordinate2D(latitude: 48.8566, longitude: 2.3522)
+        let span = MKCoordinateSpan(latitudeDelta: 40, longitudeDelta: 40)
+        let region = MKCoordinateRegion(center: center, span: span)
+
+        mapView.setRegion(region, animated: false)
     }
 
 }
