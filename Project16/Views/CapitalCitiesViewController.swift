@@ -53,7 +53,6 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
         let annotations = viewModel.cities.map { city in
             let annotation = MKPointAnnotation()
             annotation.title = city.title
-            annotation.subtitle = city.info
             annotation.coordinate = city.coordinate
             return annotation
         }
@@ -70,13 +69,34 @@ class CapitalCitiesViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(region, animated: false)
     }
     
-    
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let title = view.annotation?.title ?? nil,
-              let subtitle = view.annotation?.subtitle ?? nil else { return }
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            guard !(annotation is MKUserLocation) else { return nil }
 
-        showCapitalDetails(title: title, subtitle: subtitle)
+            let identifier = "CapitalCity"
+
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+                as? MKMarkerAnnotationView
+                ?? MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+
+            annotationView.annotation = annotation
+            annotationView.canShowCallout = true
+            annotationView.markerTintColor = .systemRed
+            annotationView.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+
+            return annotationView
+        }
+    
+    func mapView(
+        _ mapView: MKMapView,
+        annotationView view: MKAnnotationView,
+        calloutAccessoryControlTapped control: UIControl
+    ) {
+        guard let title = view.annotation?.title ?? nil,
+              let city = viewModel.cities.first(where: { $0.title == title }) else {
+            return
+        }
+
+        showCapitalDetails(title: city.title, subtitle: city.info)
     }
 
     
